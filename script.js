@@ -3,7 +3,7 @@ let hydrogenPosition = 0;
 let fossilPosition = 0;
 let isHydrogenTurn = true;
 
-// Track grid sizes
+// Track grid size
 const totalSquares = 20;
 
 // Initialize race tracks
@@ -66,16 +66,16 @@ function rollDice() {
 function getScenario(player) {
   const scenarios = {
     hydrogen: [
-      { text: "Breakthrough in hydrogen storage! Move 2 steps forward.", effect: 2 },
-      { text: "Public adoption of hydrogen slows. Move 1 step back.", effect: -1 },
-      { text: "Hydrogen vehicles gain popularity! Move 3 steps forward.", effect: 3 },
-      { text: "Storage system leak. Move 2 steps back.", effect: -2 }
+      { text: "Hydrogen breakthrough! Move 2 steps forward.", effect: 2 },
+      { text: "Storage leak! Move 1 step back.", effect: -1 },
+      { text: "Hydrogen popularity grows! Move 3 steps forward.", effect: 3 },
+      { text: "Storage issue! Move 2 steps back.", effect: -2 }
     ],
     fossil: [
-      { text: "Oil prices skyrocket! Move 1 step forward.", effect: 1 },
-      { text: "Environmental protests. Move 2 steps back.", effect: -2 },
-      { text: "Increased demand for fossil fuels. Move 2 steps forward.", effect: 2 },
-      { text: "Oil spill disaster. Move 3 steps back.", effect: -3 }
+      { text: "Oil prices soar! Move 1 step forward.", effect: 1 },
+      { text: "Environmental protest. Move 2 steps back.", effect: -2 },
+      { text: "Demand rises. Move 2 steps forward.", effect: 2 },
+      { text: "Oil spill disaster! Move 3 steps back.", effect: -3 }
     ]
   };
 
@@ -86,7 +86,7 @@ function getScenario(player) {
 // Check for winner
 function checkWinner() {
   if (hydrogenPosition === totalSquares - 1) {
-    displayWinner("Hydrogen Wins! Clean energy triumphs!");
+    displayWinner("Hydrogen Wins! Clean energy prevails!");
   } else if (fossilPosition === totalSquares - 1) {
     displayWinner("Fossil Fuels Win! But at what cost?");
   }
@@ -121,3 +121,6 @@ function updateTurnIndicator() {
     turnIndicator.textContent = "Fossil Fuels' Turn";
   }
 }
+
+// Start the game
+createTracks();
