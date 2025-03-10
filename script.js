@@ -1,17 +1,8 @@
 let hydrogenPosition = 0;
 let fossilPosition = 0;
 let isHydrogenTurn = true;
+
 const totalSquares = 20;
-
-// Initialize background music
-const backgroundMusic = document.getElementById("background-music");
-backgroundMusic.play();
-
-// Interactive background animation
-const interactiveBackground = document.getElementById("interactive-background");
-interactiveBackground.addEventListener('mousemove', function(e) {
-  interactiveBackground.style.backgroundPosition = `${e.pageX / 20}px ${e.pageY / 20}px`;
-});
 
 // Initialize race tracks
 function createTracks() {
@@ -40,19 +31,23 @@ function updateTracks() {
   fossilTrack[fossilPosition].textContent = "🛢️";
 }
 
-// Roll dice with animation
+// Roll dice with animation and sound
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
   diceAnimation.textContent = "🎲";
   diceAnimation.style.animation = "roll 1s linear";
 
+  const rollSound = new Audio('dice-roll.mp3'); // Make sure this file exists
+  rollSound.play();
+
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1;
     const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
-
+    
+    // Determine player movement and scenario effects
     const adjustedRoll = currentPlayer === "hydrogen" && Math.random() < 0.4 ? diceRoll + 1 : diceRoll;
     const scenario = getScenario(currentPlayer);
-
+    
     if (isHydrogenTurn) {
       hydrogenPosition = Math.min(hydrogenPosition + adjustedRoll + scenario.effect, totalSquares - 1);
     } else {
@@ -61,6 +56,12 @@ function rollDice() {
 
     diceAnimation.textContent = adjustedRoll;
     document.getElementById("scenario").textContent = `${currentPlayer === "hydrogen" ? "Hydrogen" : "Fossil Fuels"} rolled a ${adjustedRoll}. ${scenario.text}`;
+
+    // Play sound for backward movement
+    if (scenario.effect < 0) {
+      const backwardSound = new Audio('backward-sound.mp3');
+      backwardSound.play();
+    }
 
     checkWinner();
     isHydrogenTurn = !isHydrogenTurn;
@@ -107,20 +108,51 @@ function displayWinner(message) {
   document.getElementById("restart-area").style.display = "block";
 }
 
-// Update the turn indicator
-function updateTurnIndicator() {
-  document.getElementById("turn-indicator").textContent = isHydrogenTurn ? "Hydrogen's Turn" : "Fossil Fuels' Turn";
-}
-
 // Restart game
 function restartGame() {
   hydrogenPosition = 0;
   fossilPosition = 0;
   isHydrogenTurn = true;
+  updateTracks();
   document.getElementById("winner-banner").style.display = "none";
   document.getElementById("actions").style.display = "block";
   document.getElementById("restart-area").style.display = "none";
-  createTracks();
 }
 
-createTracks();
+// Particle.js Setup for interactive background
+particlesJS('particles-js', {
+  particles: {
+    number: {
+      value: 100,
+      density: { enable: true, value_area: 800 }
+    },
+    shape: {
+      type: 'circle',
+      stroke: { width: 0, color: '#ffffff' }
+    },
+    opacity: {
+      value: 0.5,
+      random: true,
+      anim: { enable: true, speed: 0.5, opacity_min: 0.1 }
+    },
+    size: {
+      value: 3,
+      random: true,
+      anim: { enable: true, speed: 4, size_min: 0.1 }
+    },
+    move: {
+      enable: true,
+      speed: 3,
+      direction: 'none',
+      random: false,
+      straight: false,
+      out_mode: 'out',
+      bounce: false
+    }
+  },
+  interactivity: {
+    events: {
+      onhover: { enable: true, mode: 'repulse' }
+    }
+  }
+});
