@@ -1,15 +1,15 @@
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background: url('https://example.com/your-background.jpg') no-repeat center center fixed;
+  background: url('https://example.com/ocean-and-sun.jpg') no-repeat center center fixed;
   background-size: cover;
   margin: 0;
   padding: 0;
-  color: #fff;
+  color: #333;
 }
 
 h1 {
-  background-color: rgba(76, 175, 80, 0.9); /* Green with transparency */
+  background-color: rgba(76, 175, 80, 0.9);
   color: white;
   padding: 15px;
 }
@@ -43,11 +43,11 @@ h1 {
 }
 
 #hydrogen-track div {
-  background-color: #d8f2e7; /* Soft green */
+  background-color: #d8f2e7;
 }
 
 #fossil-track div {
-  background-color: #fce4d6; /* Soft reddish-brown */
+  background-color: #fce4d6;
 }
 
 button {
@@ -66,7 +66,7 @@ button:hover {
 }
 
 button.restart-button {
-  background-color: #2196F3; /* Blue for restart */
+  background-color: #2196F3;
 }
 
 button.restart-button:hover {
@@ -92,7 +92,7 @@ button.restart-button:hover {
   margin-top: 20px;
   padding: 20px;
   color: white;
-  background-color: #ffc107; /* Gold for celebration */
+  background-color: #ffc107;
   border: 2px solid #ccc;
   border-radius: 10px;
   animation: fadeIn 1s ease-in-out;
@@ -104,12 +104,17 @@ button.restart-button:hover {
   color: #555;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes roll {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes energyBoost {
+  0% { background-color: #4CAF50; }
+  100% { background-color: #76d7c4; }
 }
