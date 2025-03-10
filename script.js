@@ -36,8 +36,8 @@ function updateTracks() {
 // Roll dice with animation
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
-  diceAnimation.textContent = "🎲";
-  diceAnimation.style.animation = "roll 1s linear";
+  diceAnimation.innerHTML = "<div class='dice-icon'>🎲</div>";
+  document.querySelector('.dice-icon').style.animation = "roll 1s linear";
 
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1;
@@ -103,4 +103,21 @@ function displayWinner(message) {
 // Restart game
 function restartGame() {
   hydrogenPosition = 0;
-  fossilPosition =
+  fossilPosition = 0;
+  isHydrogenTurn = true;
+  document.getElementById("winner-banner").style.display = "none";
+  document.getElementById("actions").style.display = "block";
+  document.getElementById("restart-area").style.display = "none";
+  updateTracks();
+  updateTurnIndicator();
+}
+
+// Update turn indicator
+function updateTurnIndicator() {
+  const turnIndicator = document.getElementById("turn-indicator");
+  if (isHydrogenTurn) {
+    turnIndicator.textContent = "Hydrogen's Turn";
+  } else {
+    turnIndicator.textContent = "Fossil Fuels' Turn";
+  }
+}
