@@ -1,9 +1,6 @@
-// Initialize positions
 let hydrogenPosition = 0;
 let fossilPosition = 0;
 let isHydrogenTurn = true;
-
-// Track grid size
 const totalSquares = 20;
 
 // Initialize race tracks
@@ -36,8 +33,10 @@ function updateTracks() {
 // Roll dice with animation
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
-  diceAnimation.innerHTML = "<div class='dice-icon'>🎲</div>";
-  document.querySelector('.dice-icon').style.animation = "roll 1s linear";
+  diceAnimation.textContent = "🎲";
+  diceAnimation.style.animation = "roll 1s linear";
+
+  playSound('roll');  // Play dice roll sound
 
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1;
@@ -48,8 +47,10 @@ function rollDice() {
 
     if (isHydrogenTurn) {
       hydrogenPosition = Math.min(hydrogenPosition + adjustedRoll + scenario.effect, totalSquares - 1);
+      playSound(scenario.effect > 0 ? 'boost' : 'penalty');
     } else {
       fossilPosition = Math.min(fossilPosition + adjustedRoll + scenario.effect, totalSquares - 1);
+      playSound(scenario.effect > 0 ? 'boost' : 'penalty');
     }
 
     diceAnimation.textContent = adjustedRoll;
@@ -62,20 +63,40 @@ function rollDice() {
   }, 1000);
 }
 
+// Play sound
+function playSound(soundType) {
+  let sound;
+  switch (soundType) {
+    case 'roll':
+      sound = new Audio('dice-roll.mp3');
+      break;
+    case 'boost':
+      sound = new Audio('boost.mp3');
+      break;
+    case 'penalty':
+      sound = new Audio('penalty.mp3');
+      break;
+    case 'win':
+      sound = new Audio('win.mp3');
+      break;
+  }
+  sound.play();
+}
+
 // Random scenarios
 function getScenario(player) {
   const scenarios = {
     hydrogen: [
-      { text: "Hydrogen breakthrough! Move 2 steps forward.", effect: 2 },
-      { text: "Storage leak! Move 1 step back.", effect: -1 },
-      { text: "Hydrogen popularity grows! Move 3 steps forward.", effect: 3 },
-      { text: "Storage issue! Move 2 steps back.", effect: -2 }
+      { text: "Breakthrough in hydrogen storage! Move 2 steps forward.", effect: 2 },
+      { text: "Public adoption of hydrogen slows. Move 1 step back.", effect: -1 },
+      { text: "Hydrogen vehicles gain popularity! Move 3 steps forward.", effect: 3 },
+      { text: "Storage system leak. Move 2 steps back.", effect: -2 }
     ],
     fossil: [
-      { text: "Oil prices soar! Move 1 step forward.", effect: 1 },
-      { text: "Environmental protest. Move 2 steps back.", effect: -2 },
-      { text: "Demand rises. Move 2 steps forward.", effect: 2 },
-      { text: "Oil spill disaster! Move 3 steps back.", effect: -3 }
+      { text: "Oil prices skyrocket! Move 1 step forward.", effect: 1 },
+      { text: "Environmental protests. Move 2 steps back.", effect: -2 },
+      { text: "Increased demand for fossil fuels. Move 2 steps forward.", effect: 2 },
+      { text: "Oil spill disaster. Move 3 steps back.", effect: -3 }
     ]
   };
 
@@ -86,7 +107,7 @@ function getScenario(player) {
 // Check for winner
 function checkWinner() {
   if (hydrogenPosition === totalSquares - 1) {
-    displayWinner("Hydrogen Wins! Clean energy prevails!");
+    displayWinner("Hydrogen Wins! Clean energy triumphs!");
   } else if (fossilPosition === totalSquares - 1) {
     displayWinner("Fossil Fuels Win! But at what cost?");
   }
@@ -100,6 +121,11 @@ function displayWinner(message) {
   document.getElementById("restart-area").style.display = "block";
 }
 
+// Update the turn indicator
+function updateTurnIndicator() {
+  document.getElementById("turn-indicator").textContent = isHydrogenTurn ? "Hydrogen's Turn" : "Fossil Fuels' Turn";
+}
+
 // Restart game
 function restartGame() {
   hydrogenPosition = 0;
@@ -108,19 +134,7 @@ function restartGame() {
   document.getElementById("winner-banner").style.display = "none";
   document.getElementById("actions").style.display = "block";
   document.getElementById("restart-area").style.display = "none";
-  updateTracks();
-  updateTurnIndicator();
+  createTracks();
 }
 
-// Update turn indicator
-function updateTurnIndicator() {
-  const turnIndicator = document.getElementById("turn-indicator");
-  if (isHydrogenTurn) {
-    turnIndicator.textContent = "Hydrogen's Turn";
-  } else {
-    turnIndicator.textContent = "Fossil Fuels' Turn";
-  }
-}
-
-// Start the game
 createTracks();
