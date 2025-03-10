@@ -3,6 +3,16 @@ let fossilPosition = 0;
 let isHydrogenTurn = true;
 const totalSquares = 20;
 
+// Initialize background music
+const backgroundMusic = document.getElementById("background-music");
+backgroundMusic.play();
+
+// Interactive background animation
+const interactiveBackground = document.getElementById("interactive-background");
+interactiveBackground.addEventListener('mousemove', function(e) {
+  interactiveBackground.style.backgroundPosition = `${e.pageX / 20}px ${e.pageY / 20}px`;
+});
+
 // Initialize race tracks
 function createTracks() {
   const hydrogenTrack = document.getElementById("hydrogen-track");
@@ -36,8 +46,6 @@ function rollDice() {
   diceAnimation.textContent = "🎲";
   diceAnimation.style.animation = "roll 1s linear";
 
-  playSound('roll');  // Play dice roll sound
-
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1;
     const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
@@ -47,10 +55,8 @@ function rollDice() {
 
     if (isHydrogenTurn) {
       hydrogenPosition = Math.min(hydrogenPosition + adjustedRoll + scenario.effect, totalSquares - 1);
-      playSound(scenario.effect > 0 ? 'boost' : 'penalty');
     } else {
       fossilPosition = Math.min(fossilPosition + adjustedRoll + scenario.effect, totalSquares - 1);
-      playSound(scenario.effect > 0 ? 'boost' : 'penalty');
     }
 
     diceAnimation.textContent = adjustedRoll;
@@ -61,26 +67,6 @@ function rollDice() {
     updateTracks();
     updateTurnIndicator();
   }, 1000);
-}
-
-// Play sound
-function playSound(soundType) {
-  let sound;
-  switch (soundType) {
-    case 'roll':
-      sound = new Audio('dice-roll.mp3');
-      break;
-    case 'boost':
-      sound = new Audio('boost.mp3');
-      break;
-    case 'penalty':
-      sound = new Audio('penalty.mp3');
-      break;
-    case 'win':
-      sound = new Audio('win.mp3');
-      break;
-  }
-  sound.play();
 }
 
 // Random scenarios
