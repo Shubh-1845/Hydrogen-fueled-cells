@@ -7,10 +7,16 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Background Music -->
+  <audio id="background-music" loop>
+    <source src="background-music.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
+
   <h1>Hydrogen Fuel Cells vs Fossil Fuels</h1>
   <p>Roll the dice and race to the finish line! Each step comes with its own challenge or boost.</p>
 
-  <!-- Track Selection and Avatar -->
+  <!-- Avatar Selection -->
   <div>
     <label for="avatar-selection">Choose Your Avatar: </label>
     <select id="avatar-selection">
@@ -46,6 +52,9 @@
   <div id="restart-area" style="display: none;">
     <button class="button restart-button" onclick="restartGame()">Restart Game</button>
   </div>
+
+  <!-- Background interactive element -->
+  <div id="interactive-background"></div>
 
   <script src="script.js"></script>
 </body>
