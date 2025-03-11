@@ -51,7 +51,7 @@ function updateTracks() {
   }
 }
 
-// Roll the dice and move the current player's piece
+// Roll the dice, apply scenarios, and move the current player's piece
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
   diceAnimation.textContent = "🎲"; // Temporary dice display
@@ -61,12 +61,20 @@ function rollDice() {
     const diceRoll = Math.floor(Math.random() * 6) + 1; // Roll a number between 1 and 6
     const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
 
+    // Apply a random scenario for the current player
+    const scenario = getScenario(currentPlayer);
+    const scenarioEffect = scenario.effect;
+
     // Update the position of the current player's piece
     if (isHydrogenTurn) {
-      hydrogenPosition = Math.min(hydrogenPosition + diceRoll, totalSquares - 1); // Prevent moving beyond the track
+      hydrogenPosition = Math.min(hydrogenPosition + diceRoll + scenarioEffect, totalSquares - 1); // Prevent moving beyond the track
     } else {
-      fossilPosition = Math.min(fossilPosition + diceRoll, totalSquares - 1); // Prevent moving beyond the track
+      fossilPosition = Math.min(fossilPosition + diceRoll + scenarioEffect, totalSquares - 1); // Prevent moving beyond the track
     }
+
+    // Update the scenario text
+    const scenarioElement = document.getElementById("scenario");
+    scenarioElement.textContent = `${currentPlayer === "hydrogen" ? "Hydrogen" : "Fossil Fuels"} rolled a ${diceRoll}. ${scenario.text}`;
 
     // Update the dice display
     diceAnimation.textContent = diceRoll;
@@ -81,6 +89,28 @@ function rollDice() {
     isHydrogenTurn = !isHydrogenTurn;
     updateTurnIndicator();
   }, 1000); // Delay for dice roll animation
+}
+
+// Generate a random scenario for the current player
+function getScenario(player) {
+  const scenarios = {
+    hydrogen: [
+      { text: "Breakthrough in hydrogen storage! Move 2 steps forward.", effect: 2 },
+      { text: "Public adoption of hydrogen slows. Move 1 step back.", effect: -1 },
+      { text: "Hydrogen vehicles gain popularity! Move 3 steps forward.", effect: 3 },
+      { text: "Storage system leak. Move 2 steps back.", effect: -2 }
+    ],
+    fossil: [
+      { text: "Oil prices skyrocket! Move 1 step forward.", effect: 1 },
+      { text: "Environmental protests. Move 2 steps back.", effect: -2 },
+      { text: "Increased demand for fossil fuels. Move 2 steps forward.", effect: 2 },
+      { text: "Oil spill disaster. Move 3 steps back.", effect: -3 }
+    ]
+  };
+
+  // Pick a random scenario for the player
+  const options = scenarios[player];
+  return options[Math.floor(Math.random() * options.length)];
 }
 
 // Update the turn indicator
