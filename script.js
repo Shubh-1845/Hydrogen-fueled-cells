@@ -1,4 +1,3 @@
-/* script.js */
 let hydrogenPosition = 0; // Position of the hydrogen piece
 let fossilPosition = 0; // Position of the fossil fuel piece
 let isHydrogenTurn = true; // Whose turn it is (true for hydrogen)
@@ -30,17 +29,25 @@ function updateTracks() {
   const fossilTrack = document.getElementById("fossil-track").children;
 
   // Clear both tracks to remove any previous positions
-  Array.from(hydrogenTrack).forEach((square) => (square.textContent = ""));
-  Array.from(fossilTrack).forEach((square) => (square.textContent = ""));
+  Array.from(hydrogenTrack).forEach((square) => {
+    square.textContent = "";
+    square.classList.remove("occupied"); // Remove previous occupied class
+  });
+  Array.from(fossilTrack).forEach((square) => {
+    square.textContent = "";
+    square.classList.remove("occupied"); // Remove previous occupied class
+  });
 
   // Place the hydrogen piece at its current position
   if (hydrogenPosition < totalSquares) {
-    hydrogenTrack[hydrogenPosition].textContent = "🚗"; // Representing hydrogen
+    hydrogenTrack[hydrogenPosition].textContent = "🚗";
+    hydrogenTrack[hydrogenPosition].classList.add("occupied");
   }
 
   // Place the fossil fuel piece at its current position
   if (fossilPosition < totalSquares) {
-    fossilTrack[fossilPosition].textContent = "🛢️"; // Representing fossil fuel
+    fossilTrack[fossilPosition].textContent = "🛢️";
+    fossilTrack[fossilPosition].classList.add("occupied");
   }
 }
 
@@ -48,7 +55,7 @@ function updateTracks() {
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
   diceAnimation.textContent = "🎲"; // Temporary dice display
-  diceAnimation.style.animation = "roll 1s linear";
+  diceAnimation.style.animation = "roll 1s linear"; // Apply animation
 
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1; // Roll a number between 1 and 6
