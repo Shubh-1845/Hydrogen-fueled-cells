@@ -21,7 +21,7 @@ function createTracks() {
     fossilTrack.appendChild(fossilSquare);
   }
 
-  updateTracks(); // Initial rendering of tracks
+  updateTracks(); // Render initial track layout
 }
 
 // Update the race tracks
@@ -33,45 +33,46 @@ function updateTracks() {
   Array.from(hydrogenTrack).forEach((square) => (square.textContent = ""));
   Array.from(fossilTrack).forEach((square) => (square.textContent = ""));
 
-  // Set the positions of the pieces
+  // Place the pieces at their respective positions
   if (hydrogenPosition < totalSquares) {
-    hydrogenTrack[hydrogenPosition].textContent = "🚗";
+    hydrogenTrack[hydrogenPosition].textContent = "🚗"; // Hydrogen piece
   }
-
   if (fossilPosition < totalSquares) {
-    fossilTrack[fossilPosition].textContent = "🛢️";
+    fossilTrack[fossilPosition].textContent = "🛢️"; // Fossil fuel piece
   }
 }
 
-// Roll dice and move players
+// Roll the dice and update positions
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
   diceAnimation.textContent = "🎲";
   diceAnimation.style.animation = "roll 1s linear";
 
   setTimeout(() => {
-    const diceRoll = Math.floor(Math.random() * 6) + 1; // Roll between 1 and 6
-    const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
-    const newPosition = isHydrogenTurn ? hydrogenPosition : fossilPosition;
+    // Generate a random dice roll between 1 and 6
+    const diceRoll = Math.floor(Math.random() * 6) + 1;
 
-    // Update player position
+    // Determine which player is rolling
+    const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
+
+    // Update the player's position based on dice roll
     if (isHydrogenTurn) {
-      hydrogenPosition = Math.min(newPosition + diceRoll, totalSquares - 1); // Prevent going beyond the last square
+      hydrogenPosition = Math.min(hydrogenPosition + diceRoll, totalSquares - 1); // Prevent going out of bounds
     } else {
-      fossilPosition = Math.min(newPosition + diceRoll, totalSquares - 1); // Prevent going beyond the last square
+      fossilPosition = Math.min(fossilPosition + diceRoll, totalSquares - 1); // Prevent going out of bounds
     }
 
     // Update dice and tracks
-    diceAnimation.textContent = diceRoll;
-    updateTracks();
+    diceAnimation.textContent = diceRoll; // Show the roll result
+    updateTracks(); // Reflect position changes on the tracks
 
     // Check for a winner
     checkWinner();
 
-    // Switch turn
+    // Switch turn to the other player
     isHydrogenTurn = !isHydrogenTurn;
     updateTurnIndicator();
-  }, 1000);
+  }, 1000); // Simulate rolling time
 }
 
 // Update turn indicator
@@ -80,25 +81,44 @@ function updateTurnIndicator() {
   turnIndicator.textContent = isHydrogenTurn ? "Hydrogen's Turn" : "Fossil's Turn";
 }
 
-// Check for winner
+// Check for a winner
 function checkWinner() {
   if (hydrogenPosition === totalSquares - 1) {
-    alert("Hydrogen Wins! Clean energy prevails!");
-    resetGame();
+    displayWinner("Hydrogen Wins! Clean energy prevails!");
   } else if (fossilPosition === totalSquares - 1) {
-    alert("Fossil Fuels Win! But at what cost?");
-    resetGame();
+    displayWinner("Fossil Fuels Win! But at what cost?");
   }
 }
 
-// Reset game
-function resetGame() {
+// Display winner banner and reset controls
+function displayWinner(message) {
+  const winnerBanner = document.getElementById("winner-banner");
+  const actionsArea = document.getElementById("actions");
+  const restartArea = document.getElementById("restart-area");
+
+  winnerBanner.textContent = message;
+  winnerBanner.style.display = "block";
+  actionsArea.style.display = "none"; // Hide game controls
+  restartArea.style.display = "block"; // Show restart button
+}
+
+// Restart the game
+function restartGame() {
   hydrogenPosition = 0;
   fossilPosition = 0;
   isHydrogenTurn = true;
-  updateTracks();
-  updateTurnIndicator();
+
+  const winnerBanner = document.getElementById("winner-banner");
+  const actionsArea = document.getElementById("actions");
+  const restartArea = document.getElementById("restart-area");
+
+  winnerBanner.style.display = "none"; // Hide winner announcement
+  actionsArea.style.display = "block"; // Show game controls
+  restartArea.style.display = "none"; // Hide restart button
+
+  updateTracks(); // Reset tracks
+  updateTurnIndicator(); // Reset turn indicator
 }
 
-// Initialize game on page load
+// Initialize the game
 document.addEventListener("DOMContentLoaded", createTracks);
