@@ -1,9 +1,9 @@
 /* script.js */
-let hydrogenPosition = 0;
-let fossilPosition = 0;
-let isHydrogenTurn = true;
+let hydrogenPosition = 0; // Position of the hydrogen piece
+let fossilPosition = 0; // Position of the fossil fuel piece
+let isHydrogenTurn = true; // Whose turn it is (true for hydrogen)
 
-const totalSquares = 20;
+const totalSquares = 20; // Total number of squares on the track
 
 // Initialize race tracks
 function createTracks() {
@@ -21,7 +21,7 @@ function createTracks() {
     fossilTrack.appendChild(fossilSquare);
   }
 
-  updateTracks(); // Render initial track layout
+  updateTracks(); // Render the initial track layout
 }
 
 // Update the race tracks
@@ -29,59 +29,60 @@ function updateTracks() {
   const hydrogenTrack = document.getElementById("hydrogen-track").children;
   const fossilTrack = document.getElementById("fossil-track").children;
 
-  // Clear the tracks
+  // Clear both tracks to remove any previous positions
   Array.from(hydrogenTrack).forEach((square) => (square.textContent = ""));
   Array.from(fossilTrack).forEach((square) => (square.textContent = ""));
 
-  // Place the pieces at their respective positions
+  // Place the hydrogen piece at its current position
   if (hydrogenPosition < totalSquares) {
-    hydrogenTrack[hydrogenPosition].textContent = "🚗"; // Hydrogen piece
+    hydrogenTrack[hydrogenPosition].textContent = "🚗"; // Representing hydrogen
   }
+
+  // Place the fossil fuel piece at its current position
   if (fossilPosition < totalSquares) {
-    fossilTrack[fossilPosition].textContent = "🛢️"; // Fossil fuel piece
+    fossilTrack[fossilPosition].textContent = "🛢️"; // Representing fossil fuel
   }
 }
 
-// Roll the dice and update positions
+// Roll the dice and move the current player's piece
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
-  diceAnimation.textContent = "🎲";
+  diceAnimation.textContent = "🎲"; // Temporary dice display
   diceAnimation.style.animation = "roll 1s linear";
 
   setTimeout(() => {
-    // Generate a random dice roll between 1 and 6
-    const diceRoll = Math.floor(Math.random() * 6) + 1;
-
-    // Determine which player is rolling
+    const diceRoll = Math.floor(Math.random() * 6) + 1; // Roll a number between 1 and 6
     const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
 
-    // Update the player's position based on dice roll
+    // Update the position of the current player's piece
     if (isHydrogenTurn) {
-      hydrogenPosition = Math.min(hydrogenPosition + diceRoll, totalSquares - 1); // Prevent going out of bounds
+      hydrogenPosition = Math.min(hydrogenPosition + diceRoll, totalSquares - 1); // Prevent moving beyond the track
     } else {
-      fossilPosition = Math.min(fossilPosition + diceRoll, totalSquares - 1); // Prevent going out of bounds
+      fossilPosition = Math.min(fossilPosition + diceRoll, totalSquares - 1); // Prevent moving beyond the track
     }
 
-    // Update dice and tracks
-    diceAnimation.textContent = diceRoll; // Show the roll result
-    updateTracks(); // Reflect position changes on the tracks
+    // Update the dice display
+    diceAnimation.textContent = diceRoll;
 
-    // Check for a winner
+    // Update the track layout to reflect new positions
+    updateTracks();
+
+    // Check if there's a winner
     checkWinner();
 
-    // Switch turn to the other player
+    // Switch to the next player's turn
     isHydrogenTurn = !isHydrogenTurn;
     updateTurnIndicator();
-  }, 1000); // Simulate rolling time
+  }, 1000); // Delay for dice roll animation
 }
 
-// Update turn indicator
+// Update the turn indicator
 function updateTurnIndicator() {
   const turnIndicator = document.getElementById("turn-indicator");
   turnIndicator.textContent = isHydrogenTurn ? "Hydrogen's Turn" : "Fossil's Turn";
 }
 
-// Check for a winner
+// Check if there is a winner
 function checkWinner() {
   if (hydrogenPosition === totalSquares - 1) {
     displayWinner("Hydrogen Wins! Clean energy prevails!");
@@ -90,23 +91,23 @@ function checkWinner() {
   }
 }
 
-// Display winner banner and reset controls
+// Display the winner banner and disable actions
 function displayWinner(message) {
   const winnerBanner = document.getElementById("winner-banner");
   const actionsArea = document.getElementById("actions");
   const restartArea = document.getElementById("restart-area");
 
-  winnerBanner.textContent = message;
-  winnerBanner.style.display = "block";
+  winnerBanner.textContent = message; // Show the winning message
+  winnerBanner.style.display = "block"; // Make the banner visible
   actionsArea.style.display = "none"; // Hide game controls
   restartArea.style.display = "block"; // Show restart button
 }
 
 // Restart the game
 function restartGame() {
-  hydrogenPosition = 0;
-  fossilPosition = 0;
-  isHydrogenTurn = true;
+  hydrogenPosition = 0; // Reset hydrogen piece position
+  fossilPosition = 0; // Reset fossil fuel piece position
+  isHydrogenTurn = true; // Reset to hydrogen's turn
 
   const winnerBanner = document.getElementById("winner-banner");
   const actionsArea = document.getElementById("actions");
@@ -120,5 +121,5 @@ function restartGame() {
   updateTurnIndicator(); // Reset turn indicator
 }
 
-// Initialize the game
+// Initialize the game when the page loads
 document.addEventListener("DOMContentLoaded", createTracks);
