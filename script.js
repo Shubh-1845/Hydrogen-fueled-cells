@@ -12,8 +12,11 @@ function createTracks() {
 
   for (let i = 0; i < totalSquares; i++) {
     const hydrogenSquare = document.createElement("div");
-    const fossilSquare = document.createElement("div");
+    hydrogenSquare.textContent = ""; // Empty content for better visibility
     hydrogenTrack.appendChild(hydrogenSquare);
+
+    const fossilSquare = document.createElement("div");
+    fossilSquare.textContent = ""; // Empty content for better visibility
     fossilTrack.appendChild(fossilSquare);
   }
 
@@ -32,55 +35,41 @@ function updateTracks() {
   fossilTrack[fossilPosition].textContent = "🛢️";
 }
 
-// Roll dice with animation and sound
+// Roll dice and move players
 function rollDice() {
   const diceAnimation = document.getElementById("dice-animation");
   diceAnimation.textContent = "🎲";
   diceAnimation.style.animation = "roll 1s linear";
 
-  const rollSound = new Audio('dice-roll.mp3');
-  rollSound.play();
-
   setTimeout(() => {
     const diceRoll = Math.floor(Math.random() * 6) + 1;
     const currentPlayer = isHydrogenTurn ? "hydrogen" : "fossil";
-    const adjustedRoll = currentPlayer === "hydrogen" && Math.random() < 0.4 ? diceRoll + 1 : diceRoll;
-    const scenario = getScenario(currentPlayer);
-    
+    const adjustedRoll = currentPlayer === "hydrogen" ? diceRoll + 1 : diceRoll; // Slight boost for hydrogen
+    const newPosition = isHydrogenTurn ? hydrogenPosition : fossilPosition;
+
+    // Update positions
     if (isHydrogenTurn) {
-      hydrogenPosition = Math.min(hydrogenPosition + adjustedRoll + scenario.effect, totalSquares - 1);
+      hydrogenPosition = Math.min(newPosition + adjustedRoll, totalSquares - 1);
     } else {
-      fossilPosition = Math.min(fossilPosition + adjustedRoll + scenario.effect, totalSquares - 1);
+      fossilPosition = Math.min(newPosition + adjustedRoll, totalSquares - 1);
     }
 
-    diceAnimation.textContent = adjustedRoll;
-    document.getElementById("scenario").textContent = `${currentPlayer === "hydrogen" ? "Hydrogen" : "Fossil Fuels"} rolled a ${adjustedRoll}. ${scenario.text}`;
-
-    if (scenario.effect < 0) {
-      const backwardSound = new Audio('backward-sound.mp3');
-      backwardSound.play();
-    }
-
-    checkWinner();
-    isHydrogenTurn = !isHydrogenTurn;
+    diceAnimation.textContent = diceRoll;
     updateTracks();
-    updateTurnIndicator();
+    checkWinner();
+
+    isHydrogenTurn = !isHydrogenTurn; // Switch turn
   }, 1000);
 }
 
-// Scenarios
-function getScenario(player) {
-  const scenarios = {
-    hydrogen: [
-      { text: "Breakthrough in hydrogen storage! Move 2 steps forward.", effect: 2 },
-      { text: "Public adoption of hydrogen slows. Move 1 step back.", effect: -1 }
-    ],
-    fossil: [
-      { text: "Oil prices skyrocket! Move 1 step forward.", effect: 1 },
-      { text: "Oil spill disaster. Move 3 steps back.", effect: -3 }
-    ]
-  };
-  return scenarios[player][Math.floor(Math.random() * scenarios[player].length)];
+// Check for winner
+function checkWinner() {
+  if (hydrogenPosition === totalSquares - 1) {
+    alert("Hydrogen Wins! Clean energy prevails!");
+  } else if (fossilPosition === totalSquares - 1) {
+    alert("Fossil Fuels Win! But at what cost?");
+  }
 }
 
+// Initialize game on page load
 document.addEventListener("DOMContentLoaded", createTracks);
