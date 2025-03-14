@@ -1,5 +1,4 @@
 
-
 let hydrogenPosition = 0; // Position of the hydrogen piece
 let fossilPosition = 0; // Position of the fossil fuel piece
 let isHydrogenTurn = true; // Whose turn it is (true for hydrogen)
